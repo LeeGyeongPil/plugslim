@@ -1,0 +1,12 @@
+{
+  "model": "sonnet",
+  "theme": "dark",
+  "enabledPlugins": {
+    "gitkit@sample-market": true
+  },
+  "permissions": {
+    "allow": [
+      "Bash(git status)"
+    ]
+  }
+}

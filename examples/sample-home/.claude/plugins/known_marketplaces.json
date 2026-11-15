@@ -1,0 +1,7 @@
+{
+  "sample-market": {
+    "source": { "source": "github", "repo": "example/sample-market" },
+    "installLocation": "plugins/marketplaces/sample-market",
+    "lastUpdated": "2026-11-01T00:00:00.000Z"
+  }
+}

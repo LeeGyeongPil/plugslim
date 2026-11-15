@@ -1,0 +1,9 @@
+{
+  "name": "gitkit",
+  "version": "1.0.0",
+  "description": "Practice fixture plugin (not a real plugin)",
+  "author": { "name": "plugslim fixture" },
+  "skills": [
+    "./extra-skills/"
+  ]
+}
