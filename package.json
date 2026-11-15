@@ -1,6 +1,6 @@
 {
   "name": "plugslim",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Keep only the skills you use from a Claude Code plugin, and measure the always-on skill-listing token cost.",
   "keywords": [
     "claude-code",
