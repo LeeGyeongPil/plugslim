@@ -144,6 +144,35 @@ describe('pick', () => {
     expect(fs.readdirSync(path.join(overlay, 'skills')).sort()).toEqual(['commit', 'deploy']);
   });
 
+  it('re-pick of an originally enabled plugin does not print the was-not-enabled notice (en and ko)', () => {
+    const fx = makeFixture();
+    const first = fx.plug(['--lang', 'en', 'pick', ID, '--keep', 'commit,status']);
+    expect(first.out).not.toContain('was not enabled');
+    for (const [lang, phrase] of [['en', 'was not enabled'], ['ko', '꺼져 있었습니다']]) {
+      const again = fx.plug(['--lang', lang, 'pick', ID, '--keep', 'commit']);
+      expect(again.code).toBe(0);
+      expect(again.out).not.toContain(phrase);
+      const dry = fx.plug(['--lang', lang, 'pick', ID, '--keep', 'commit', '--dry-run']);
+      expect(dry.out).not.toContain(phrase);
+    }
+    expect(fx.plug(['restore', ID]).code).toBe(0);
+    const settings = fx.readSettings() as { enabledPlugins: Record<string, boolean> };
+    expect(settings.enabledPlugins[ID]).toBe(true);
+  });
+
+  it('an originally disabled plugin prints the notice on the first pick and on re-pick', () => {
+    const fx = makeFixture();
+    const settings = fx.readSettings() as { enabledPlugins: Record<string, boolean> };
+    settings.enabledPlugins[ID] = false;
+    fx.writeSettings(settings);
+    const first = fx.plug(['--lang', 'en', 'pick', ID, '--keep', 'commit']);
+    expect(first.out).toContain('was not enabled');
+    const again = fx.plug(['--lang', 'en', 'pick', ID, '--keep', 'commit,status']);
+    expect(again.out).toContain('was not enabled');
+    const ko = fx.plug(['--lang', 'ko', 'pick', ID, '--keep', 'commit']);
+    expect(ko.out).toContain('꺼져 있었습니다');
+  });
+
   it('overlay: copies node_modules and resolves symlinks inside the plugin', () => {
     const fx = makeFixture();
     fs.mkdirSync(path.join(fx.pluginDir, 'node_modules', 'dep'), { recursive: true });

@@ -93,7 +93,9 @@ export function pickCommand(ctx: Ctx, args: Args): number {
   } else {
     ctx.io.out(ctx.t('pick.noSettingsChange'));
   }
-  if (inventory.enabled[plugin.id] !== true) ctx.io.out(ctx.t('pick.wasDisabled', { id: plugin.id }));
+  // On a re-pick the original is off because plugslim turned it off; judge by the first pick's record.
+  const wasEnabled = existing ? existing.prev.origEnabled === true : inventory.enabled[plugin.id] === true;
+  if (!wasEnabled) ctx.io.out(ctx.t('pick.wasDisabled', { id: plugin.id }));
 
   if (args.dryRun) {
     ctx.io.out(ctx.t('pick.dryRunDone'));
