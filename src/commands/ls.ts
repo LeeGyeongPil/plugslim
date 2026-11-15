@@ -6,7 +6,7 @@ import { type CostSettings, type CostedItem, budgetTokens, costPlugin, costSetti
 import { UsageError } from '../errors.js';
 import { type InstalledPlugin, readInventory, resolvePlugin } from '../inventory.js';
 import { type ScanWarning, looksLikePlugin, scanPlugin } from '../plugin.js';
-import { readSettings } from '../settings.js';
+import { enabledMap, readSettings } from '../settings.js';
 import { readState } from '../state.js';
 import { storePaths } from '../paths.js';
 import { bar, renderTable } from '../table.js';
@@ -115,8 +115,13 @@ export function lsCommand(ctx: Ctx, args: Args): number {
     settings = costSettingsFrom(inventory.settings.data, contextWindow);
     const selected = query === undefined ? inventory.plugins : [resolvePlugin(inventory.plugins, query)];
     detail = query !== undefined;
+    // Claude Code layers settings: user < project < local. Read the project files like doctor does.
+    const projectDir = path.resolve(ctx.cwd, args.projectDir ?? '.');
+    const projectEnabled = enabledMap(readSettings(path.join(projectDir, '.claude', 'settings.json')));
+    const localEnabled = enabledMap(readSettings(path.join(projectDir, '.claude', 'settings.local.json')));
+    const enabled: Record<string, boolean> = { ...inventory.enabled, ...projectEnabled, ...localEnabled };
     plugins = selected
-      .map((p) => describePlugin(p, inventory.enabled[p.id] === true, settings))
+      .map((p) => describePlugin(p, enabled[p.id] === true, settings))
       .sort((a, b) => b.tokens - a.tokens || a.id.localeCompare(b.id));
   }
 
