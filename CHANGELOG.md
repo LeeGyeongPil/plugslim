@@ -3,6 +3,14 @@
 All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+## [0.1.2] - 2026-11-16
+
+### Fixed
+
+- `plugslim pick` no longer prints "was not enabled" when re-picking a plugin that was enabled before the first pick; the notice now follows the original state recorded in the first pick.
+
 ## [0.1.1] - 2026-11-16
 
 ### Fixed
