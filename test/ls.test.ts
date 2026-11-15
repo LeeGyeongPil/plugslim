@@ -97,6 +97,44 @@ describe('ls', () => {
     expect(data.totalTokens).toBe(0);
   });
 
+  describe('project and local settings', () => {
+    function setup(): { fx: ReturnType<typeof makeFixture>; proj: string; ls: () => LsJson } {
+      const fx = makeFixture();
+      expect(fx.plug(['pick', 'gitkit@sample-market', '--keep', 'commit,status']).code).toBe(0);
+      const proj = path.join(fx.root, 'proj');
+      fs.mkdirSync(path.join(proj, '.claude'), { recursive: true });
+      const ls = (): LsJson => {
+        const r = fx.raw(['ls', '--json', '--config-dir', fx.config, '--store-dir', fx.store], {}, proj);
+        expect(r.code).toBe(0);
+        return JSON.parse(r.out) as LsJson;
+      };
+      return { fx, proj, ls };
+    }
+
+    it('counts a plugin re-enabled by the project settings', () => {
+      const { proj, ls } = setup();
+      const before = ls();
+      expect(before.plugins.find((p) => p.id === 'gitkit@sample-market')!.enabled).toBe(false);
+      expect(before.totalTokens).toBe(37);
+      fs.writeFileSync(path.join(proj, '.claude', 'settings.json'), JSON.stringify({ enabledPlugins: { 'gitkit@sample-market': true } }));
+      const after = ls();
+      expect(after.plugins.find((p) => p.id === 'gitkit@sample-market')!.enabled).toBe(true);
+      expect(after.totalTokens).toBe(160);
+    });
+
+    it('lets a local false turn off a project true, and --project-dir selects the folder', () => {
+      const { fx, proj, ls } = setup();
+      fs.writeFileSync(path.join(proj, '.claude', 'settings.json'), JSON.stringify({ enabledPlugins: { 'gitkit@sample-market': true } }));
+      fs.writeFileSync(path.join(proj, '.claude', 'settings.local.json'), JSON.stringify({ enabledPlugins: { 'gitkit@sample-market': false } }));
+      expect(ls().totalTokens).toBe(37);
+      fs.rmSync(path.join(proj, '.claude', 'settings.local.json'));
+      fs.writeFileSync(path.join(proj, '.claude', 'settings.local.json'), JSON.stringify({ enabledPlugins: { 'gitkit@sample-market': true } }));
+      expect(ls().totalTokens).toBe(160);
+      const elsewhere = fx.plug(['ls', '--json', '--project-dir', proj]);
+      expect((JSON.parse(elsewhere.out) as LsJson).totalTokens).toBe(160);
+    });
+  });
+
   it('exits 2 on an unsupported installed_plugins.json format', () => {
     const fx = makeFixture();
     fs.writeFileSync(path.join(fx.config, 'plugins', 'installed_plugins.json'), '"nope"');
