@@ -1,0 +1,43 @@
+{
+  "name": "plugslim",
+  "version": "0.1.0",
+  "description": "Keep only the skills you use from a Claude Code plugin, and measure the always-on skill-listing token cost.",
+  "keywords": [
+    "claude-code",
+    "plugin",
+    "skills",
+    "tokens",
+    "context",
+    "cli"
+  ],
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "plugslim": "dist/bin.js"
+  },
+  "main": "dist/cli.js",
+  "files": [
+    "dist",
+    "examples/sample-home",
+    "README.md",
+    "README.ko.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "compile": "node scripts/build.mjs",
+    "prepublishOnly": "node scripts/build.mjs --allow-prebuilt",
+    "test": "node scripts/build.mjs && vitest run",
+    "demo": "node scripts/build.mjs && node scripts/demo.mjs"
+  },
+  "dependencies": {
+    "yaml": "2.9.1"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.5",
+    "typescript": "7.0.2",
+    "vitest": "5.1.0"
+  }
+}
