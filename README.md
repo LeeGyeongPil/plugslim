@@ -191,7 +191,7 @@ Each listed item is one line, `- <plugin>:<name>: <description + when_to_use>`, 
 | Symptom | Cause | Fix |
 |---|---|---|
 | `Cannot parse ...settings.json as JSON` and exit 2 | Invalid JSON in settings | Fix the file; plugslim wrote nothing |
-| `ls` says the plugin is still enabled after pick | A project or local settings file re-enables the original | `plugslim doctor --project-dir .`, then set it to `false` there |
+| `ls` says the plugin is still enabled after pick (`ls` also reads the current folder's, or `--project-dir`'s, project and local settings) | A project or local settings file re-enables the original | `plugslim doctor --project-dir .`, then set it to `false` there |
 | Skills did not change | The session was already running | Start a new session or run `/reload-plugins` |
 | Unknown skill name, exit 2 | Typo in `--keep` | The error lists the available names |
 | Tokens differ from Claude Code | plugslim estimates (4 chars per token) | Use them to compare, not as exact values |

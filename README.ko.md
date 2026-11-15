@@ -193,7 +193,7 @@ flowchart LR
 | 증상 | 원인 | 해결 |
 |---|---|---|
 | `settings.json 을(를) JSON 으로 읽을 수 없습니다` 와 종료 코드 2 | 설정의 JSON 이 잘못됨 | 파일을 고치세요. plugslim 은 아무것도 쓰지 않았습니다 |
-| pick 뒤에도 `ls` 에 원본이 켜져 있음 | 프로젝트·로컬 설정이 원본을 다시 켬 | `plugslim doctor --project-dir .` 후 거기서 `false` 로 바꿉니다 |
+| pick 뒤에도 `ls` 에 원본이 켜져 있음 (`ls` 는 현재 폴더 또는 `--project-dir` 의 프로젝트·로컬 설정도 반영합니다) | 프로젝트·로컬 설정이 원본을 다시 켬 | `plugslim doctor --project-dir .` 후 거기서 `false` 로 바꿉니다 |
 | 스킬이 바뀌지 않음 | 이미 실행 중인 세션 | 새 세션을 시작하거나 `/reload-plugins` 실행 |
 | 모르는 스킬 이름, 종료 코드 2 | `--keep` 오타 | 오류 메시지가 가능한 이름을 나열합니다 |
 | Claude Code 와 토큰이 다름 | plugslim 은 추정(4글자당 1토큰) | 비교용으로만 쓰고 정확한 값으로 보지 마세요 |
