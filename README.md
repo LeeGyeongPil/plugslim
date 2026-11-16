@@ -49,12 +49,13 @@ Total (enabled): 123 tok of 2000 budget (6.2%)
 ![ls output](docs/images/01-ls.png)
 *The plugin table: item count, estimated tokens, share of the budget.*
 
-Then the four-step flow on your own config:
+Then the five-step flow on your own config:
 
-1. `plugslim ls` shows where the tokens go.
-2. `plugslim pick <plugin-id> --keep a,b --dry-run` shows what would change. Nothing is written.
-3. `plugslim pick <plugin-id> --keep a,b` does it.
-4. Start a new session or run `/reload-plugins`.
+1. In Claude Code, run `/skill-doctor` to see which skills you never use. Leave those out: pass the skills you want to keep to `--keep`, or the flagged ones to `--drop`, using the bare names that `plugslim ls <plugin-id>` lists (needs Claude Code v2.1.252 or later per the official [docs](https://code.claude.com/docs/en/skills.md#find-unused-skills), "Find unused skills", checked 2026-11-16; optional step).
+2. `plugslim ls` shows where the tokens go.
+3. `plugslim pick <plugin-id> --keep a,b --dry-run` shows what would change. Nothing is written.
+4. `plugslim pick <plugin-id> --keep a,b` does it.
+5. Start a new session or run `/reload-plugins`.
 
 ### Try it safely: `npm run demo`
 
@@ -184,6 +185,7 @@ Each listed item is one line, `- <plugin>:<name>: <description + when_to_use>`, 
 
 - Good fit: a plugin you partly use, where you want a smaller, reversible footprint, or a CI number for your own plugin.
 - Other tools: to turn off a whole plugin use Claude Code's own `/plugin` menu; for your own (non-plugin) skills use the built-in `skillOverrides` setting ([docs](https://code.claude.com/docs/en/skills.md)).
+- Alongside `/skill-doctor`: it shows which skills you use ([docs](https://code.claude.com/docs/en/skills.md)); plugslim then does the trimming, keeping just the skills you choose inside a plugin, whereas the `/plugin` menu above switches a whole plugin on or off.
 - Limits: user-scope plugins only for now. `--scope local|project` is planned.
 
 ## Troubleshooting

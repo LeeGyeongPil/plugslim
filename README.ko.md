@@ -49,12 +49,13 @@ gitkit@sample-market     6   123  6.2%  █░░░░░░░░░  켜짐
 ![ls 출력](docs/images/01-ls.ko.png)
 *플러그인 표: 항목 수, 추정 토큰, 예산 대비 비율.*
 
-내 설정에서의 네 단계는 이렇습니다.
+내 설정에서의 다섯 단계는 이렇습니다.
 
-1. `plugslim ls` 로 토큰이 어디서 나가는지 봅니다.
-2. `plugslim pick <plugin-id> --keep a,b --dry-run` 으로 무엇이 바뀔지 봅니다. 아무것도 쓰지 않습니다.
-3. `plugslim pick <plugin-id> --keep a,b` 로 실제로 적용합니다.
-4. 새 세션을 시작하거나 `/reload-plugins` 를 실행합니다.
+1. Claude Code 에서 `/skill-doctor` 를 실행해 쓰지 않는 스킬을 확인합니다. 그 스킬은 빼고, 남길 스킬은 `--keep` 에, 빼려는 스킬은 `--drop` 에 `plugslim ls <plugin-id>` 가 보여 주는 이름 그대로 넣습니다(공식 [문서](https://code.claude.com/docs/en/skills.md#find-unused-skills)의 "Find unused skills" 에 따르면 Claude Code v2.1.252 이상 필요, 2026-11-16 확인, 선택 단계).
+2. `plugslim ls` 로 토큰이 어디서 나가는지 봅니다.
+3. `plugslim pick <plugin-id> --keep a,b --dry-run` 으로 무엇이 바뀔지 봅니다. 아무것도 쓰지 않습니다.
+4. `plugslim pick <plugin-id> --keep a,b` 로 실제로 적용합니다.
+5. 새 세션을 시작하거나 `/reload-plugins` 를 실행합니다.
 
 ### 안전하게 해 보기: `npm run demo`
 
@@ -186,6 +187,7 @@ flowchart LR
 
 - 잘 맞는 경우: 일부만 쓰는 플러그인의 부담을 되돌릴 수 있게 줄이고 싶을 때, 또는 내 플러그인의 CI 용 숫자가 필요할 때
 - 다른 도구: 플러그인을 통째로 끄려면 Claude Code 의 `/plugin` 메뉴, 플러그인이 아닌 내 스킬은 기본 `skillOverrides` 설정([문서](https://code.claude.com/docs/en/skills.md))
+- `/skill-doctor` 와 함께: 어떤 스킬을 쓰는지 보여 줍니다([문서](https://code.claude.com/docs/en/skills.md)). 줄이는 일은 plugslim 이 맡아 플러그인 안에서 고른 스킬만 남기고, 위의 `/plugin` 메뉴는 플러그인을 통째로 켜거나 끕니다.
 - 한계: 지금은 사용자 범위 플러그인만 다룹니다. `--scope local|project` 는 계획 중입니다.
 
 ## 자주 겪는 문제
