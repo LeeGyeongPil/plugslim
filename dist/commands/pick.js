@@ -19,11 +19,16 @@ function splitList(value) {
         .filter((part) => part !== '');
 }
 /** Turn user-typed names into item names. A token matches an item name or its folder/file name. */
-function resolveNames(items, tokens) {
+function resolveNames(items, tokens, pluginName) {
     const names = new Set();
     const unknown = [];
+    const match = (token) => items.filter((item) => item.name === token || path.basename(item.rel, '.md') === token);
     for (const token of tokens) {
-        const hits = items.filter((item) => item.name === token || path.basename(item.rel, '.md') === token);
+        let hits = match(token);
+        // Claude Code shows names as '<plugin>:<skill>'; accept that form when nothing matches exactly.
+        const prefix = `${pluginName}:`;
+        if (hits.length === 0 && token.startsWith(prefix))
+            hits = match(token.slice(prefix.length));
         if (hits.length === 0)
             unknown.push(token);
         for (const hit of hits)
@@ -58,7 +63,7 @@ export function pickCommand(ctx, args) {
         throw new UsageError('err.sourceMissing', { id: plugin.id, path: plugin.installPath });
     const scan = scanPlugin(plugin.installPath, plugin.name);
     const allNames = [...new Set(scan.items.map((item) => item.name))];
-    const requested = resolveNames(scan.items, splitList(args.keep ?? args.drop));
+    const requested = resolveNames(scan.items, splitList(args.keep ?? args.drop), scan.name);
     if (requested.unknown.length > 0) {
         throw new UsageError('err.unknownItems', { names: requested.unknown.join(', '), available: allNames.join(', ') });
     }

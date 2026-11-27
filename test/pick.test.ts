@@ -79,6 +79,31 @@ describe('pick', () => {
     expect(fs.existsSync(path.join(overlay, 'commands', 'status.md'))).toBe(true);
   });
 
+  it('overlay accepts <plugin>:<skill> names for --keep and --drop', () => {
+    const fx = makeFixture();
+    const r = fx.plug(['pick', ID, '--keep', 'gitkit:commit,status', '--dry-run']);
+    expect(r.code).toBe(0);
+    expect(r.out).toContain('123 -> 37');
+    expect(r.out).toContain('keep: commit, status');
+    expect(r.out).not.toContain('gitkit:commit');
+    const d = fx.plug(['pick', ID, '--drop', 'gitkit:deploy', '--dry-run']);
+    expect(d.code).toBe(0);
+    expect(d.out).toContain('drop: deploy');
+  });
+
+  it('overlay: an exact name wins over prefix stripping, and another plugin prefix exits 2', () => {
+    const fx = makeFixture();
+    const skill = path.join(fx.pluginDir, 'skills', 'pref');
+    fs.mkdirSync(skill, { recursive: true });
+    fs.writeFileSync(path.join(skill, 'SKILL.md'), '---\nname: gitkit:pref\ndescription: Exact-name skill.\n---\n\nBody.\n');
+    const ok = fx.plug(['pick', ID, '--keep', 'gitkit:pref', '--dry-run']);
+    expect(ok.code).toBe(0);
+    expect(ok.out).toContain('keep: gitkit:pref');
+    const bad = fx.plug(['pick', ID, '--keep', 'other:commit']);
+    expect(bad.code).toBe(2);
+    expect(bad.err).toContain('other:commit');
+  });
+
   it('overlay: an unknown skill name exits 2 and lists the available names', () => {
     const fx = makeFixture();
     const configBefore = hashTree(fx.config);
