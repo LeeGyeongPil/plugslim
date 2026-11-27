@@ -51,7 +51,7 @@ gitkit@sample-market     6   123  6.2%  █░░░░░░░░░  켜짐
 
 내 설정에서의 다섯 단계는 이렇습니다.
 
-1. Claude Code 에서 `/skill-doctor` 를 실행해 쓰지 않는 스킬을 확인합니다. 그 스킬은 빼고, 남길 스킬은 `--keep` 에, 빼려는 스킬은 `--drop` 에 `plugslim ls <plugin-id>` 가 보여 주는 이름 그대로 넣습니다(공식 [문서](https://code.claude.com/docs/en/skills.md#find-unused-skills)의 "Find unused skills" 에 따르면 Claude Code v2.1.252 이상 필요, 2026-11-16 확인, 선택 단계).
+1. Claude Code 에서 `/skill-doctor` 를 실행해 쓰지 않는 스킬을 확인합니다. 그 스킬은 빼고, 남길 스킬은 `--keep` 에, 빼려는 스킬은 `--drop` 에 `plugslim ls <plugin-id>` 가 보여 주는 접두 없는 이름 또는 `/skill-doctor` 에 보이는 `<plugin>:<skill>` 이름으로 넣습니다(공식 [문서](https://code.claude.com/docs/en/skills.md#find-unused-skills)의 "Find unused skills" 에 따르면 Claude Code v2.1.252 이상 필요, 2026-11-16 확인, 선택 단계).
 2. `plugslim ls` 로 토큰이 어디서 나가는지 봅니다.
 3. `plugslim pick <plugin-id> --keep a,b --dry-run` 으로 무엇이 바뀔지 봅니다. 아무것도 쓰지 않습니다.
 4. `plugslim pick <plugin-id> --keep a,b` 로 실제로 적용합니다.
@@ -79,7 +79,7 @@ $ npm run demo
 | `ls [plugin-id]` | 플러그인별, 또는 한 플러그인의 스킬별 추정 목록 비용 | `plugslim ls gitkit@sample-market` |
 | `ls --json` | 기계가 읽는 출력(`plugins[].items[]`, `totalTokens`) | `plugslim ls --json` |
 | `ls --path <dir>` | 플러그인 폴더를 직접 측정(플러그인 제작자용) | `plugslim ls --path . --max-tokens 800` |
-| `pick <id> --keep a,b` / `--drop c` | 가벼운 복사본을 만들고 바꿔 켬 | `plugslim pick gitkit@sample-market --keep commit,status` |
+| `pick <id> --keep a,b` / `--drop c` | 가벼운 복사본을 만들고 바꿔 켬 (접두 없는 이름 또는 `<plugin>:<skill>`) | `plugslim pick gitkit@sample-market --keep commit,status` |
 | `pick ... --dry-run` | 설정 diff 와 전후 토큰만 출력, 쓰지 않음 | 아래 참고 |
 | `sync [id]` | 원본이 업데이트된 뒤 같은 선택을 다시 적용 | `plugslim sync --check` |
 | `restore [id \| --all]` | 설정 키를 되돌리고 복사본 삭제 | `plugslim restore gitkit@sample-market` |

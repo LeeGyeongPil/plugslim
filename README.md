@@ -51,7 +51,7 @@ Total (enabled): 123 tok of 2000 budget (6.2%)
 
 Then the five-step flow on your own config:
 
-1. In Claude Code, run `/skill-doctor` to see which skills you never use. Leave those out: pass the skills you want to keep to `--keep`, or the flagged ones to `--drop`, using the bare names that `plugslim ls <plugin-id>` lists (needs Claude Code v2.1.252 or later per the official [docs](https://code.claude.com/docs/en/skills.md#find-unused-skills), "Find unused skills", checked 2026-11-16; optional step).
+1. In Claude Code, run `/skill-doctor` to see which skills you never use. Leave those out: pass the skills you want to keep to `--keep`, or the flagged ones to `--drop`, using the bare names that `plugslim ls <plugin-id>` lists, or the `<plugin>:<skill>` names shown in `/skill-doctor` (needs Claude Code v2.1.252 or later per the official [docs](https://code.claude.com/docs/en/skills.md#find-unused-skills), "Find unused skills", checked 2026-11-16; optional step).
 2. `plugslim ls` shows where the tokens go.
 3. `plugslim pick <plugin-id> --keep a,b --dry-run` shows what would change. Nothing is written.
 4. `plugslim pick <plugin-id> --keep a,b` does it.
@@ -77,7 +77,7 @@ restored: yes (123 tok, settings and overlay back to the original)
 | `ls [plugin-id]` | Estimated listing cost per plugin, or per skill for one plugin | `plugslim ls gitkit@sample-market` |
 | `ls --json` | Machine-readable output (`plugins[].items[]`, `totalTokens`) | `plugslim ls --json` |
 | `ls --path <dir>` | Measure a plugin folder directly (for plugin authors) | `plugslim ls --path . --max-tokens 800` |
-| `pick <id> --keep a,b` / `--drop c` | Build the slim copy and switch to it | `plugslim pick gitkit@sample-market --keep commit,status` |
+| `pick <id> --keep a,b` / `--drop c` | Build the slim copy and switch to it (bare or `<plugin>:<skill>` names) | `plugslim pick gitkit@sample-market --keep commit,status` |
 | `pick ... --dry-run` | Print the settings diff and before/after tokens, write nothing | see below |
 | `sync [id]` | Re-apply the same pick after the original was updated | `plugslim sync --check` |
 | `restore [id \| --all]` | Put the settings keys back and delete the copy | `plugslim restore gitkit@sample-market` |
